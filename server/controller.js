@@ -4,8 +4,8 @@ const {SERVER_PORT, CONNECTION_STRING} = process.env;
 
 const Sequelize = require('sequelize')
 
-const sequelize = new Sequelize({
-    connectionString: CONNECTION_STRING,
+const sequelize = new Sequelize(CONNECTION_STRING,{
+    // connectionString: CONNECTION_STRING,
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
@@ -28,7 +28,7 @@ module.exports = {
             create table cities (
                 city_id serial primary key,
                 name varchar,
-                rating integer
+                rating integer,
                 country_id integer references countries (country_id)
             );
 
