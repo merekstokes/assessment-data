@@ -235,30 +235,33 @@ module.exports = {
     },
     getCountries: (req, res) => {
         sequelize.query(`
-            SELECT * FROM countries
+            SELECT * FROM countries;
         `).then((dbRes) => {
-            res.sendStatus(200).send(dbRes[0])
-        })
+            res.status(201).send(dbRes[0])
+        }).catch((err) => console.log(err))
     },
     createCity: (req, res)=> {
         const {name, rating, countryId} = req.body
+        console.log(typeof name, typeof rating, typeof countryId)
         sequelize.query(`
             INSERT INTO cities (name, rating, country_id)
-            VALUES (${name}, ${rating}, ${countryId})
+            VALUES ('${name}', ${rating}, ${countryId})
         `).then((dbRes) => {
-            res.sendStatus(200).send(dbRes[0])
+            res.status(200).send(dbRes[0])
         })
     },
     getCities: (req, res) => {
         sequelize.query(`
             SELECT a.city_id,
-            name,
-            rating
-            FROM cities a
-            INNER JOIN countries b
-            ON b.city_id = a.city_id
+            a.name as city,
+            a.rating,
+            b.country_id,
+            b.name as country
+            FROM cities as a
+            INNER JOIN countries as b
+            ON b.country_id = a.country_id;
         `).then((dbRes) => {
-            res.sendStatus(200).send(dbRes[0])
+            res.status(200).send(dbRes[0])
         })
     },
     deleteCity: (req, res) => {
@@ -267,7 +270,7 @@ module.exports = {
         DELETE FROM cities
         WHERE city_id = ${id}
         `).then((dbRes) => {
-            res.sendStatus(200).send(dbRes[0])
+            res.status(200).send(dbRes[0])
         })
     }
     
